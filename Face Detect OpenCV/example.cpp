@@ -14,89 +14,93 @@ using namespace cv;
 
 const string WindowName = "Face Detection example";
 
-class CascadeDetectorAdapter: public DetectionBasedTracker::IDetector
+class CascadeDetectorAdapter : public DetectionBasedTracker::IDetector
 {
-    public:
-        CascadeDetectorAdapter(cv::Ptr<cv::CascadeClassifier> detector):
-            IDetector(),
-            Detector(detector)
-        {
-            CV_Assert(detector);
-        }
-
-        void detect(const cv::Mat &Image, std::vector<cv::Rect> &objects) CV_OVERRIDE
-        {
-            Detector->detectMultiScale(Image, objects, scaleFactor, minNeighbours, 0, minObjSize, maxObjSize);
-        }
-
-        virtual ~CascadeDetectorAdapter() CV_OVERRIDE
-        {}
-
-    private:
-        CascadeDetectorAdapter();
-        cv::Ptr<cv::CascadeClassifier> Detector;
- };
-
-int main(int , char** )
+public:
+CascadeDetectorAdapter(cv::Ptr<cv::CascadeClassifier> detector) :
+        IDetector(),
+        Detector(detector)
 {
-    namedWindow(WindowName);
+        CV_Assert(detector);
+}
 
-    VideoCapture VideoStream(0);
+void detect(const cv::Mat &Image, std::vector<cv::Rect> &objects) CV_OVERRIDE
+{
+        Detector->detectMultiScale(Image, objects, scaleFactor, minNeighbours, 0, minObjSize, maxObjSize);
+}
 
-    if (!VideoStream.isOpened())
-    {
-        printf("Error: Cannot open video stream from camera\n");
-        return 1;
-    }
+virtual ~CascadeDetectorAdapter() CV_OVERRIDE
+{
+}
 
-    std::string cascadeFrontalfilename = samples::findFile("data/lbpcascades/lbpcascade_frontalface.xml");
-    cv::Ptr<cv::CascadeClassifier> cascade = makePtr<cv::CascadeClassifier>(cascadeFrontalfilename);
-    cv::Ptr<DetectionBasedTracker::IDetector> MainDetector = makePtr<CascadeDetectorAdapter>(cascade);
-    if ( cascade->empty() )
-    {
-      printf("Error: Cannot load %s\n", cascadeFrontalfilename.c_str());
-      return 2;
-    }
+private:
+CascadeDetectorAdapter();
+cv::Ptr<cv::CascadeClassifier> Detector;
+};
 
-    cascade = makePtr<cv::CascadeClassifier>(cascadeFrontalfilename);
-    cv::Ptr<DetectionBasedTracker::IDetector> TrackingDetector = makePtr<CascadeDetectorAdapter>(cascade);
-    if ( cascade->empty() )
-    {
-      printf("Error: Cannot load %s\n", cascadeFrontalfilename.c_str());
-      return 2;
-    }
+int main(int, char** )
+{
+        namedWindow(WindowName);
 
-    DetectionBasedTracker::Parameters params;
-    DetectionBasedTracker Detector(MainDetector, TrackingDetector, params);
+        VideoCapture VideoStream(0);
 
-    if (!Detector.run())
-    {
-        printf("Error: Detector initialization failed\n");
-        return 2;
-    }
-
-    Mat ReferenceFrame;
-    Mat GrayFrame;
-    vector<Rect> Faces;
-
-    do
-    {
-        VideoStream >> ReferenceFrame;
-        cvtColor(ReferenceFrame, GrayFrame, COLOR_BGR2GRAY);
-        Detector.process(GrayFrame);
-        Detector.getObjects(Faces);
-
-        for (size_t i = 0; i < Faces.size(); i++)
+        if (!VideoStream.isOpened())
         {
-            rectangle(ReferenceFrame, Faces[i], Scalar(0,255,0));
+                printf("Error: Cannot open video stream from camera\n");
+                return 1;
         }
 
-        imshow(WindowName, ReferenceFrame);
-    } while (waitKey(30) < 0);
+        std::string cascadeFrontalfilename = samples::findFile("data/lbpcascades/lbpcascade_frontalface.xml");
+        cv::Ptr<cv::CascadeClassifier> cascade = makePtr<cv::CascadeClassifier>(cascadeFrontalfilename);
+        cv::Ptr<DetectionBasedTracker::IDetector> MainDetector = makePtr<CascadeDetectorAdapter>(cascade);
+        if ( cascade->empty() )
+        {
+                printf("Error: Cannot load %s\n", cascadeFrontalfilename.c_str());
+                return 2;
+        }
 
-    Detector.stop();
+        cascade = makePtr<cv::CascadeClassifier>(cascadeFrontalfilename);
+        cv::Ptr<DetectionBasedTracker::IDetector> TrackingDetector = makePtr<CascadeDetectorAdapter>(cascade);
+        if ( cascade->empty() )
+        {
+                printf("Error: Cannot load %s\n", cascadeFrontalfilename.c_str());
+                return 2;
+        }
 
-    return 0;
+        DetectionBasedTracker::Parameters params;
+        DetectionBasedTracker Detector(MainDetector, TrackingDetector, params);
+
+        if (!Detector.run())
+        {
+                printf("Error: Detector initialization failed\n");
+                return 2;
+        }
+
+        Mat ReferenceFrame;
+        Mat GrayFrame;
+        vector<Rect> Faces;
+
+        do
+        {
+                VideoStream >> ReferenceFrame;
+                cvtColor(ReferenceFrame, GrayFrame, COLOR_BGR2GRAY);
+                Detector.process(GrayFrame);
+                Detector.getObjects(Faces);
+
+                for (size_t i = 0; i < Faces.size(); i++)
+                {
+                        Rect r = Faces[i];
+                        rectangle(ReferenceFrame, Faces[i], Scalar(0,255,0));
+                        printf("xy face = %d x %d\n", r.x, r.y);
+
+                }
+
+                imshow(WindowName, ReferenceFrame);
+        } while (waitKey(30) < 0);
+
+        Detector.stop();
+
+        return 0;
 }
 
 #else
@@ -104,8 +108,8 @@ int main(int , char** )
 #include <stdio.h>
 int main()
 {
-    printf("This sample works for UNIX or ANDROID or Visual Studio 2013+ only\n");
-    return 0;
+        printf("This sample works for UNIX or ANDROID or Visual Studio 2013+ only\n");
+        return 0;
 }
 
 #endif
