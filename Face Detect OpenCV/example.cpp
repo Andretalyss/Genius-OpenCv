@@ -1,9 +1,9 @@
 #if defined(__linux__) || defined(LINUX) || defined(__APPLE__) || defined(ANDROID) || (defined(_MSC_VER) && _MSC_VER>=1800)
 
-#include <opencv2/imgproc.hpp>  // Gaussian Blur
+#include <opencv2/imgproc.hpp>     // Gaussian Blur
 #include <opencv2/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
 #include <opencv2/videoio.hpp>
-#include <opencv2/highgui.hpp>  // OpenCV window I/O
+#include <opencv2/highgui.hpp>     // OpenCV window I/O
 #include <opencv2/features2d.hpp>
 #include <opencv2/objdetect.hpp>
 
@@ -13,6 +13,12 @@ using namespace std;
 using namespace cv;
 
 const string WindowName = "LP1 Final Project";
+
+static Scalar randomColor(RNG& rng)
+{
+        int icolor = (unsigned)rng;
+        return Scalar(icolor&255, (icolor>>8)&255, (icolor>>16)&255);
+}
 
 class CascadeDetectorAdapter : public DetectionBasedTracker::IDetector
 {
@@ -43,6 +49,7 @@ int main(int, char** )
         namedWindow(WindowName);
 
         VideoCapture VideoStream(0);
+        RNG rng(0xFFFFFFFF);
 
         if (!VideoStream.isOpened())
         {
@@ -93,21 +100,86 @@ int main(int, char** )
                         rectangle(ReferenceFrame, Faces[i], Scalar(0,255,0));
                         printf("xy face = %d x %d\n", r.x, r.y);
 
+                        Point org;
+                        org.x = ReferenceFrame.cols - 1250;
+                        org.y = ReferenceFrame.rows - 650;
+
+                        string text = "X = " + to_string(r.x);
+
+                        putText(ReferenceFrame, text, org, 0,
+                                25*0.05+0.1, Scalar(255, 255, 255), 4, LINE_AA);
+
+                        org.x = ReferenceFrame.cols - 1250;
+                        org.y = ReferenceFrame.rows - 600;
+
+                        text = "Y = " + to_string(r.y);
+
+                        putText(ReferenceFrame, text, org, 0,
+                                25*0.05+0.1, Scalar(255, 255, 255), 4, LINE_AA);
+
                 }
 
                 line(ReferenceFrame, Point(ReferenceFrame.cols / 4, 0),
-                Point(ReferenceFrame.cols / 4, ReferenceFrame.rows - 1),
-                Scalar(255, 0, 0));
+                     Point(ReferenceFrame.cols / 4, ReferenceFrame.rows - 1),
+                     Scalar(255, 0, 0));
 
                 line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 2, 0),
-                Point((ReferenceFrame.cols / 4) * 2, ReferenceFrame.rows - 1),
-                Scalar(255, 0, 0));
+                     Point((ReferenceFrame.cols / 4) * 2, ReferenceFrame.rows - 1),
+                     Scalar(255, 0, 0));
 
                 line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 3, 0),
-                Point((ReferenceFrame.cols / 4) * 3, ReferenceFrame.rows - 1),
-                Scalar(255, 0, 0));
+                     Point((ReferenceFrame.cols / 4) * 3, ReferenceFrame.rows - 1),
+                     Scalar(255, 0, 0));
+
+                Point org;
+                org.x = (ReferenceFrame.cols / 4) + 100;
+                org.y = ReferenceFrame.rows - 620;
+
+                Point recA, recB;
+
+                // Green rectangle
+                recA.x = (ReferenceFrame.cols - ReferenceFrame.cols) + 80;
+                recA.y = ReferenceFrame.rows - 60;
+                recB.x = (ReferenceFrame.cols / 4) - 80;
+                recB.y = ReferenceFrame.rows - 60;
+
+                rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 0), MAX(100, 1), LINE_AA);
+
+                // Red rectangle
+                recA.x = (ReferenceFrame.cols / 4) + 80;
+                recA.y = ReferenceFrame.rows - 60;
+                recB.x = (ReferenceFrame.cols / 4) * 2 - 80;
+                recB.y = ReferenceFrame.rows - 60;
+
+                rectangle(ReferenceFrame, recA, recB, Scalar(0, 0, 255), MAX(100, 1), LINE_AA);
+
+                // Yellow rectangle
+                recA.x = (ReferenceFrame.cols / 4) * 2 + 80;
+                recA.y = ReferenceFrame.rows - 60;
+                recB.x = (ReferenceFrame.cols / 4) * 3 - 80;
+                recB.y = ReferenceFrame.rows - 60;
+
+                rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 255), MAX(100, 1), LINE_AA);
+
+                // Blue rectangle
+                recA.x = (ReferenceFrame.cols / 4) * 3 + 80;
+                recA.y = ReferenceFrame.rows - 60;
+                recB.x = (ReferenceFrame.cols / 4) * 4 - 80;
+                recB.y = ReferenceFrame.rows - 60;
+
+                rectangle(ReferenceFrame, recA, recB, Scalar(255, 0, 0), MAX(100, 1), LINE_AA);
+
+                putText(ReferenceFrame, "GENIUS", org, 3,
+                        70*0.05+0.1, randomColor(rng), 10, LINE_AA);
+
+                org.x = ReferenceFrame.cols - 200;
+                org.y = ReferenceFrame.rows - 680;
+
+                putText(ReferenceFrame, "Score: ", org, 0,
+                        25*0.05+0.1, Scalar(255, 255, 255), 4, LINE_AA);
 
                 imshow(WindowName, ReferenceFrame);
+
         } while (waitKey(30) < 0);
 
         Detector.stop();
