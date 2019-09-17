@@ -95,6 +95,18 @@ int main(int, char** )
 
                 }
 
+                line(ReferenceFrame, Point(ReferenceFrame.cols / 4, 0),
+                Point(ReferenceFrame.cols / 4, ReferenceFrame.rows - 1),
+                Scalar(255, 0, 0));
+
+                line(ReferenceFrame, Point(ReferenceFrame.cols / 2, 0),
+                Point(ReferenceFrame.cols / 2, ReferenceFrame.rows - 1),
+                Scalar(255, 0, 0));
+
+                line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 3, 0),
+                Point((ReferenceFrame.cols / 4) * 3, ReferenceFrame.rows - 1),
+                Scalar(255, 0, 0));
+
                 imshow(WindowName, ReferenceFrame);
         } while (waitKey(30) < 0);
 
