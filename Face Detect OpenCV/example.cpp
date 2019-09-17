@@ -12,7 +12,7 @@
 using namespace std;
 using namespace cv;
 
-const string WindowName = "Face Detection example";
+const string WindowName = "LP1 Final Project";
 
 class CascadeDetectorAdapter : public DetectionBasedTracker::IDetector
 {
@@ -99,8 +99,8 @@ int main(int, char** )
                 Point(ReferenceFrame.cols / 4, ReferenceFrame.rows - 1),
                 Scalar(255, 0, 0));
 
-                line(ReferenceFrame, Point(ReferenceFrame.cols / 2, 0),
-                Point(ReferenceFrame.cols / 2, ReferenceFrame.rows - 1),
+                line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 2, 0),
+                Point((ReferenceFrame.cols / 4) * 2, ReferenceFrame.rows - 1),
                 Scalar(255, 0, 0));
 
                 line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 3, 0),
