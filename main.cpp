@@ -1,9 +1,7 @@
-#if defined(__linux__) || defined(LINUX) || defined(__APPLE__) || defined(ANDROID) || (defined(_MSC_VER) && _MSC_VER>=1800)
-
-#include <opencv2/imgproc.hpp>     // Gaussian Blur
-#include <opencv2/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
+#include <opencv2/imgproc.hpp>
+#include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
-#include <opencv2/highgui.hpp>     // OpenCV window I/O
+#include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/objdetect.hpp>
 
@@ -186,14 +184,3 @@ int main(int, char** )
 
         return 0;
 }
-
-#else
-
-#include <stdio.h>
-int main()
-{
-        printf("This sample works for UNIX or ANDROID or Visual Studio 2013+ only\n");
-        return 0;
-}
-
-#endif
