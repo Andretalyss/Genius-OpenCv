@@ -22,6 +22,9 @@ int main(int argc, char** argv)
         VideoCapture VideoStream(0);
         RNG rng(0xFFFFFFFF);
 
+        VideoStream.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
+        VideoStream.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
+
         if (!VideoStream.isOpened())
         {
                 printf("Error: Cannot open video stream from camera\n");
