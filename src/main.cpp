@@ -126,10 +126,6 @@ int main(int argc, char** argv)
                      Point((ReferenceFrame.cols / 4) * 3, ReferenceFrame.rows - 1),
                      Scalar(255, 0, 0));
 
-                Point pos;
-                pos.x = (ReferenceFrame.cols / 4) + 100;
-                pos.y = ReferenceFrame.rows - 620;
-
                 Point recA, recB;
 
                 // Green rectangle
@@ -164,8 +160,12 @@ int main(int argc, char** argv)
 
                 rectangle(ReferenceFrame, recA, recB, Scalar(255, 0, 0), MAX(80, 0), LINE_AA);
 
+                Point pos;
+                pos.x = (ReferenceFrame.cols / 4) + 100;
+                pos.y = ReferenceFrame.rows - 620;
+
                 putText(ReferenceFrame, "GENIUS", pos, 3,
-                        70*0.05+0.1, randomColor(rng), 10, LINE_AA);
+                        70*0.05+0.1, Scalar(255, 255, 255), 10, LINE_AA);
 
                 pos.x = (ReferenceFrame.cols / 4) * 3;
                 pos.y = ReferenceFrame.rows - 680;
@@ -187,12 +187,24 @@ int main(int argc, char** argv)
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(0, 255, 0), 4, LINE_AA);
 
+                        pos.x = (ReferenceFrame.cols / 4) + 100;
+                        pos.y = ReferenceFrame.rows - 620;
+
+                        putText(ReferenceFrame, "GENIUS", pos, 3,
+                                70*0.05+0.1, Scalar(0, 255, 0), 10, LINE_AA);
+
                 } // end if
 
                 else if(position == "Red")
                 {
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(0, 0, 255), 4, LINE_AA);
+
+                        pos.x = (ReferenceFrame.cols / 4) + 100;
+                        pos.y = ReferenceFrame.rows - 620;
+
+                        putText(ReferenceFrame, "GENIUS", pos, 3,
+                                70*0.05+0.1, Scalar(0, 0, 255), 10, LINE_AA);
 
                 } // end else/if
 
@@ -201,12 +213,24 @@ int main(int argc, char** argv)
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(0, 255, 255), 4, LINE_AA);
 
+                        pos.x = (ReferenceFrame.cols / 4) + 100;
+                        pos.y = ReferenceFrame.rows - 620;
+
+                        putText(ReferenceFrame, "GENIUS", pos, 3,
+                                70*0.05+0.1, Scalar(0, 255, 255), 10, LINE_AA);
+
                 } // end else/if
 
                 else if(position == "Blue")
                 {
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(255, 0, 0), 4, LINE_AA);
+
+                        pos.x = (ReferenceFrame.cols / 4) + 100;
+                        pos.y = ReferenceFrame.rows - 620;
+
+                        putText(ReferenceFrame, "GENIUS", pos, 3,
+                                70*0.05+0.1, Scalar(255, 0, 0), 10, LINE_AA);
 
                 } // end else/if
 
