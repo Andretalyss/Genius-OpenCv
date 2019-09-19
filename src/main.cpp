@@ -22,8 +22,8 @@ int main(int argc, char** argv)
         VideoCapture VideoStream(0);
         RNG rng(0xFFFFFFFF);
 
-        VideoStream.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
-        VideoStream.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
+        //VideoStream.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
+        //VideoStream.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
 
         if (!VideoStream.isOpened())
         {
@@ -106,69 +106,115 @@ int main(int argc, char** argv)
                                 25*0.05+0.1, Scalar(255, 255, 255), 4, LINE_AA);
 
                         int x_pos = r.x;
+                        int y_pos = r.y;
 
-                        if(x_pos > 950) position = "Green";
+                        // detection cordinates
+                        if(x_pos > (ReferenceFrame.cols / 10) * 6 && y_pos < (ReferenceFrame.rows / 10) * 3) position = "Blue";
 
-                        if(x_pos > 640 && x_pos < 700) position = "Red";
+                        if(x_pos < (ReferenceFrame.cols / 10) * 4 && y_pos < (ReferenceFrame.rows / 10) * 3) position = "Red";
 
-                        if(x_pos > 325 && x_pos < 370) position = "Yellow";
+                        if(x_pos > (ReferenceFrame.cols / 10) * 6 && y_pos > (ReferenceFrame.rows / 10) * 7) position = "Yellow";
 
-                        if(x_pos < 60) position = "Blue";
+                        if(x_pos < (ReferenceFrame.cols / 10) * 4 && y_pos > (ReferenceFrame.rows / 10) * 7) position = "Green";
 
                 } // end for
 
-                line(ReferenceFrame, Point(ReferenceFrame.cols / 4, 0),
+                // square
+                Point grid_a, grid_b;
+
+                grid_a.x = (ReferenceFrame.cols / 10) * 4;
+                grid_a.y = (ReferenceFrame.rows / 10) * 3;
+
+                grid_b.x = (ReferenceFrame.cols / 10) * 6;
+                grid_b.y = (ReferenceFrame.rows / 10) * 7;
+
+                rectangle(ReferenceFrame, grid_a, grid_b, Scalar(255,255,255), MAX(2, 0), LINE_AA  );
+
+                // lines
+                grid_a.x = (ReferenceFrame.cols / 2);
+                grid_a.y = 0;
+
+                grid_b.x = (ReferenceFrame.cols / 2);
+                grid_b.y = (ReferenceFrame.rows / 10) * 3;
+
+                rectangle(ReferenceFrame, grid_a, grid_b, Scalar(255,255,255), MAX(2, 0), LINE_AA);
+
+                grid_a.x = (ReferenceFrame.cols / 2);
+                grid_a.y = (ReferenceFrame.rows / 10) * 7;
+
+                grid_b.x = (ReferenceFrame.cols / 2);
+                grid_b.y = ReferenceFrame.rows;
+
+                rectangle(ReferenceFrame, grid_a, grid_b, Scalar(255,255,255), MAX(2, 0), LINE_AA);
+
+                grid_a.x = 0;
+                grid_a.y = (ReferenceFrame.rows / 2);
+
+                grid_b.x = (ReferenceFrame.cols / 10) * 4;
+                grid_b.y = (ReferenceFrame.rows / 2);
+
+                rectangle(ReferenceFrame, grid_a, grid_b, Scalar(255,255,255), MAX(2, 0), LINE_AA);
+
+                grid_a.x = (ReferenceFrame.cols / 10) * 6;
+                grid_a.y = (ReferenceFrame.rows / 2);
+
+                grid_b.x = ReferenceFrame.cols;
+                grid_b.y = (ReferenceFrame.rows / 2);
+
+                rectangle(ReferenceFrame, grid_a, grid_b, Scalar(255,255,255), MAX(2, 0), LINE_AA);
+
+                /*line(ReferenceFrame, Point(ReferenceFrame.cols / 4, 0),
                      Point(ReferenceFrame.cols / 4, ReferenceFrame.rows - 1),
                      Scalar(255, 0, 0));
 
-                line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 2, 0),
+                   line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 2, 0),
                      Point((ReferenceFrame.cols / 4) * 2, ReferenceFrame.rows - 1),
                      Scalar(255, 0, 0));
 
-                line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 3, 0),
+                   line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 3, 0),
                      Point((ReferenceFrame.cols / 4) * 3, ReferenceFrame.rows - 1),
                      Scalar(255, 0, 0));
 
-                Point recA, recB;
+                   Point recA, recB;
 
-                // Green rectangle
-                recA.x = (ReferenceFrame.cols - ReferenceFrame.cols) + 80;
-                recA.y = ReferenceFrame.rows - 60;
-                recB.x = (ReferenceFrame.cols / 4) - 80;
-                recB.y = ReferenceFrame.rows - 60;
+                   // Green rectangle
+                   recA.x = (ReferenceFrame.cols - ReferenceFrame.cols) + 80;
+                   recA.y = ReferenceFrame.rows - 60;
+                   recB.x = (ReferenceFrame.cols / 4) - 80;
+                   recB.y = ReferenceFrame.rows - 60;
 
-                rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 0), MAX(80, 0), LINE_AA);
+                   rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 0), MAX(80, 0), LINE_AA);
 
-                // Red rectangle
-                recA.x = (ReferenceFrame.cols / 4) + 80;
-                recA.y = ReferenceFrame.rows - 60;
-                recB.x = (ReferenceFrame.cols / 4) * 2 - 80;
-                recB.y = ReferenceFrame.rows - 60;
+                   // Red rectangle
+                   recA.x = (ReferenceFrame.cols / 4) + 80;
+                   recA.y = ReferenceFrame.rows - 60;
+                   recB.x = (ReferenceFrame.cols / 4) * 2 - 80;
+                   recB.y = ReferenceFrame.rows - 60;
 
-                rectangle(ReferenceFrame, recA, recB, Scalar(0, 0, 255), MAX(80, 0), LINE_AA);
+                   rectangle(ReferenceFrame, recA, recB, Scalar(0, 0, 255), MAX(80, 0), LINE_AA);
 
-                // Yellow rectangle
-                recA.x = (ReferenceFrame.cols / 4) * 2 + 80;
-                recA.y = ReferenceFrame.rows - 60;
-                recB.x = (ReferenceFrame.cols / 4) * 3 - 80;
-                recB.y = ReferenceFrame.rows - 60;
+                   // Yellow rectangle
+                   recA.x = (ReferenceFrame.cols / 4) * 2 + 80;
+                   recA.y = ReferenceFrame.rows - 60;
+                   recB.x = (ReferenceFrame.cols / 4) * 3 - 80;
+                   recB.y = ReferenceFrame.rows - 60;
 
-                rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 255), MAX(80, 0), LINE_AA);
+                   rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 255), MAX(80, 0), LINE_AA);
 
-                // Blue rectangle
-                recA.x = (ReferenceFrame.cols / 4) * 3 + 80;
-                recA.y = ReferenceFrame.rows - 60;
-                recB.x = (ReferenceFrame.cols / 4) * 4 - 80;
-                recB.y = ReferenceFrame.rows - 60;
+                   // Blue rectangle
+                   recA.x = (ReferenceFrame.cols / 4) * 3 + 80;
+                   recA.y = ReferenceFrame.rows - 60;
+                   recB.x = (ReferenceFrame.cols / 4) * 4 - 80;
+                   recB.y = ReferenceFrame.rows - 60;
 
-                rectangle(ReferenceFrame, recA, recB, Scalar(255, 0, 0), MAX(80, 0), LINE_AA);
-
+                   rectangle(ReferenceFrame, recA, recB, Scalar(255, 0, 0), MAX(80, 0), LINE_AA);
+                 */
                 Point pos;
-                pos.x = (ReferenceFrame.cols / 4) + 100;
-                pos.y = ReferenceFrame.rows - 620;
+                pos.x = (ReferenceFrame.cols / 10) * 4;
+                pos.y = (ReferenceFrame.rows / 8) * 3;
 
                 putText(ReferenceFrame, "GENIUS", pos, 3,
-                        70*0.05+0.1, Scalar(255, 255, 255), 10, LINE_AA);
+                        40*0.05+0.1, Scalar(255, 255, 255), 5, LINE_AA);
 
                 pos.x = (ReferenceFrame.cols / 4) * 3;
                 pos.y = ReferenceFrame.rows - 680;
@@ -190,11 +236,11 @@ int main(int argc, char** argv)
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(0, 255, 0), 4, LINE_AA);
 
-                        pos.x = (ReferenceFrame.cols / 4) + 100;
-                        pos.y = ReferenceFrame.rows - 620;
+                        pos.x = (ReferenceFrame.cols / 10) * 4;
+                        pos.y = (ReferenceFrame.rows / 8) * 3;
 
                         putText(ReferenceFrame, "GENIUS", pos, 3,
-                                70*0.05+0.1, Scalar(0, 255, 0), 10, LINE_AA);
+                                40*0.05+0.1, Scalar(0, 255, 0), 5, LINE_AA);
 
                 } // end if
 
@@ -203,11 +249,11 @@ int main(int argc, char** argv)
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(0, 0, 255), 4, LINE_AA);
 
-                        pos.x = (ReferenceFrame.cols / 4) + 100;
-                        pos.y = ReferenceFrame.rows - 620;
+                        pos.x = (ReferenceFrame.cols / 10) * 4;
+                        pos.y = (ReferenceFrame.rows / 8) * 3;
 
                         putText(ReferenceFrame, "GENIUS", pos, 3,
-                                70*0.05+0.1, Scalar(0, 0, 255), 10, LINE_AA);
+                                40*0.05+0.1, Scalar(0, 0, 255), 5, LINE_AA);
 
                 } // end else/if
 
@@ -216,11 +262,11 @@ int main(int argc, char** argv)
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(0, 255, 255), 4, LINE_AA);
 
-                        pos.x = (ReferenceFrame.cols / 4) + 100;
-                        pos.y = ReferenceFrame.rows - 620;
+                        pos.x = (ReferenceFrame.cols / 10) * 4;
+                        pos.y = (ReferenceFrame.rows / 8) * 3;
 
                         putText(ReferenceFrame, "GENIUS", pos, 3,
-                                70*0.05+0.1, Scalar(0, 255, 255), 10, LINE_AA);
+                                40*0.05+0.1, Scalar(0, 255, 255), 5, LINE_AA);
 
                 } // end else/if
 
@@ -229,11 +275,11 @@ int main(int argc, char** argv)
                         putText(ReferenceFrame, position, pos, 0,
                                 20*0.05+0.1, Scalar(255, 0, 0), 4, LINE_AA);
 
-                        pos.x = (ReferenceFrame.cols / 4) + 100;
-                        pos.y = ReferenceFrame.rows - 620;
+                        pos.x = (ReferenceFrame.cols / 10) * 4;
+                        pos.y = (ReferenceFrame.rows / 8) * 3;
 
                         putText(ReferenceFrame, "GENIUS", pos, 3,
-                                70*0.05+0.1, Scalar(255, 0, 0), 10, LINE_AA);
+                                40*0.05+0.1, Scalar(255, 0, 0), 5, LINE_AA);
 
                 } // end else/if
 
