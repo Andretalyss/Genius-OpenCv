@@ -4,20 +4,34 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/objdetect.hpp>
+#include <chrono>
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <thread>
 
 #include <stdio.h>
 
+#include "headers/Genius.hpp"
 #include "headers/CascadeDetectorAdapter.hpp"
 #include "util.cpp"
+
+#define AZUL 0
+#define VERMELHO 1
+#define VERDE 2
+#define AMARELO 3
 
 using namespace std;
 using namespace cv;
 
+int i=0;
 const string WindowName = "LP1 Final Project";
 
+
 int main(int argc, char** argv)
-{
-        namedWindow(WindowName);
+{       
+
+        namedWindow(WindowName,WINDOW_NORMAL);
 
         VideoCapture VideoStream(0);
         RNG rng(0xFFFFFFFF);
@@ -64,9 +78,10 @@ int main(int argc, char** argv)
         Mat ReferenceFrame;
         Mat GrayFrame;
         vector<Rect> Faces;
+        Genius *game = new Genius();
 
         do
-        {
+        {      
                 VideoStream >> ReferenceFrame;
                 cvtColor(ReferenceFrame, GrayFrame, COLOR_BGR2GRAY);
                 Detector.process(GrayFrame);
@@ -76,7 +91,7 @@ int main(int argc, char** argv)
 
                 for (size_t i = 0; i < Faces.size(); i++)
                 {
-                        //Rect r = Faces[i];
+                       // Rect r = Faces[i];
                         rectangle(ReferenceFrame, Faces[i], Scalar(0,255,0));
                         //printf("xy face = %d x %d\n", r.x, r.y);
 
@@ -174,53 +189,54 @@ int main(int argc, char** argv)
                    line(ReferenceFrame, Point((ReferenceFrame.cols / 4) * 3, 0),
                      Point((ReferenceFrame.cols / 4) * 3, ReferenceFrame.rows - 1),
                      Scalar(255, 0, 0));
-
+*/
                    Point recA, recB;
 
-                   // Green rectangle
-                   recA.x = (ReferenceFrame.cols - ReferenceFrame.cols) + 80;
-                   recA.y = ReferenceFrame.rows - 60;
-                   recB.x = (ReferenceFrame.cols / 4) - 80;
-                   recB.y = ReferenceFrame.rows - 60;
+                    //Green rectangle
+                   recA.x = (ReferenceFrame.cols/6) - 60;
+                   recA.y = (ReferenceFrame.rows/6) - 40;
+                   recB.x = (ReferenceFrame.cols/6)*1 - 60;
+                   recB.y = (ReferenceFrame.rows/6) - 40;
 
                    rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 0), MAX(80, 0), LINE_AA);
 
                    // Red rectangle
-                   recA.x = (ReferenceFrame.cols / 4) + 80;
-                   recA.y = ReferenceFrame.rows - 60;
-                   recB.x = (ReferenceFrame.cols / 4) * 2 - 80;
-                   recB.y = ReferenceFrame.rows - 60;
+                   recA.x = (ReferenceFrame.cols / 6)*5 + 60;
+                   recA.y = (ReferenceFrame.rows/6) - 40;
+                   recB.x = (ReferenceFrame.cols / 6) * 5 + 60;
+                   recB.y = (ReferenceFrame.rows/6) - 40;
 
                    rectangle(ReferenceFrame, recA, recB, Scalar(0, 0, 255), MAX(80, 0), LINE_AA);
 
                    // Yellow rectangle
-                   recA.x = (ReferenceFrame.cols / 4) * 2 + 80;
-                   recA.y = ReferenceFrame.rows - 60;
-                   recB.x = (ReferenceFrame.cols / 4) * 3 - 80;
-                   recB.y = ReferenceFrame.rows - 60;
+                   recA.x = (ReferenceFrame.cols / 6) - 60;
+                   recA.y = (ReferenceFrame.rows/6)*5 + 40;
+                   recB.x = (ReferenceFrame.cols / 6) - 60;
+                   recB.y = (ReferenceFrame.rows/6)*5 + 40;
 
                    rectangle(ReferenceFrame, recA, recB, Scalar(0, 255, 255), MAX(80, 0), LINE_AA);
 
                    // Blue rectangle
-                   recA.x = (ReferenceFrame.cols / 4) * 3 + 80;
-                   recA.y = ReferenceFrame.rows - 60;
-                   recB.x = (ReferenceFrame.cols / 4) * 4 - 80;
-                   recB.y = ReferenceFrame.rows - 60;
+                   recA.x = (ReferenceFrame.cols / 6) * 5 + 60;
+                   recA.y = (ReferenceFrame.rows/6) * 5 + 40;
+                   recB.x = (ReferenceFrame.cols / 6) * 5 + 60;
+                   recB.y = (ReferenceFrame.rows/6) * 5 + 40;
 
                    rectangle(ReferenceFrame, recA, recB, Scalar(255, 0, 0), MAX(80, 0), LINE_AA);
-                 */
+
+
                 Point pos;
-                pos.x = (ReferenceFrame.cols / 10) * 4;
+                pos.x = (ReferenceFrame.cols / 10) * 4.1;
                 pos.y = (ReferenceFrame.rows / 8) * 3;
 
-                putText(ReferenceFrame, "GENIUS", pos, 3,
-                        40*0.05+0.1, Scalar(255, 255, 255), 5, LINE_AA);
+                //putText(ReferenceFrame, "GENIUS", pos, 3,
+                  //15*0.05+0.2, Scalar(255, 255, 255), 5, LINE_AA);
 
-                pos.x = (ReferenceFrame.cols / 4) * 3;
-                pos.y = ReferenceFrame.rows - 680;
+                pos.x = (ReferenceFrame.cols / 10) * 4.5;
+                pos.y = (ReferenceFrame.rows/8) * 5.5;
 
                 putText(ReferenceFrame, "Score: ", pos, 0,
-                        25*0.05+0.1, Scalar(255, 255, 255), 4, LINE_AA);
+                        10*0.05+0.2, Scalar(255, 255, 255), 4, LINE_AA);
 
                 pos.x = (ReferenceFrame.cols / 4) * 3;
                 pos.y = ReferenceFrame.rows - 600;
@@ -239,8 +255,8 @@ int main(int argc, char** argv)
                         pos.x = (ReferenceFrame.cols / 10) * 4;
                         pos.y = (ReferenceFrame.rows / 8) * 3;
 
-                        putText(ReferenceFrame, "GENIUS", pos, 3,
-                                40*0.05+0.1, Scalar(0, 255, 0), 5, LINE_AA);
+                       // putText(ReferenceFrame, "GENIUS", pos, 3,
+                         //       40*0.05+0.1, Scalar(0, 255, 0), 5, LINE_AA);
 
                 } // end if
 
@@ -252,8 +268,8 @@ int main(int argc, char** argv)
                         pos.x = (ReferenceFrame.cols / 10) * 4;
                         pos.y = (ReferenceFrame.rows / 8) * 3;
 
-                        putText(ReferenceFrame, "GENIUS", pos, 3,
-                                40*0.05+0.1, Scalar(0, 0, 255), 5, LINE_AA);
+                        //putText(ReferenceFrame, "GENIUS", pos, 3,
+                          //      40*0.05+0.1, Scalar(0, 0, 255), 5, LINE_AA);
 
                 } // end else/if
 
@@ -265,8 +281,8 @@ int main(int argc, char** argv)
                         pos.x = (ReferenceFrame.cols / 10) * 4;
                         pos.y = (ReferenceFrame.rows / 8) * 3;
 
-                        putText(ReferenceFrame, "GENIUS", pos, 3,
-                                40*0.05+0.1, Scalar(0, 255, 255), 5, LINE_AA);
+                        //putText(ReferenceFrame, "GENIUS", pos, 3,
+                          //      40*0.05+0.1, Scalar(0, 255, 255), 5, LINE_AA);
 
                 } // end else/if
 
@@ -278,13 +294,123 @@ int main(int argc, char** argv)
                         pos.x = (ReferenceFrame.cols / 10) * 4;
                         pos.y = (ReferenceFrame.rows / 8) * 3;
 
-                        putText(ReferenceFrame, "GENIUS", pos, 3,
-                                40*0.05+0.1, Scalar(255, 0, 0), 5, LINE_AA);
+                       // putText(ReferenceFrame, "GENIUS", pos, 3,
+                         //       40*0.05+0.1, Scalar(255, 0, 0), 5, LINE_AA);
 
                 } // end else/if
+                
+
+               game->setSequencia();
+               int tam_sequencia = game->getNumeroSequencia();
+        
+               double time_token = 0;
+               vector<int> results = game->getSequencia();
 
                 imshow(WindowName, ReferenceFrame);
 
+                
+                while(i < tam_sequencia){
+
+                         auto start = chrono::high_resolution_clock::now();
+                         Point posc;
+
+                        posc.x = (ReferenceFrame.cols / 10) * 4.1;
+                        posc.y = (ReferenceFrame.rows / 8) * 3;
+
+                        if(results[i] == AZUL){
+                        putText(ReferenceFrame, "GENIUS", posc, 3,
+                         15*0.05+0.2, Scalar(255, 0, 0), 5, LINE_AA);
+                         cout << "Entrou azul " << endl;
+                         imshow(WindowName, ReferenceFrame);
+                        }
+                        else if(results[i] == VERMELHO){
+                        putText(ReferenceFrame, "GENIUS", posc, 3,
+                         15*0.05+0.2, Scalar(0, 0, 255), 5, LINE_AA);   
+                         cout << "Entrou vermelho" << endl;
+                         imshow(WindowName, ReferenceFrame);
+                        }
+                        else if(results[i] == VERDE){
+                        putText(ReferenceFrame, "GENIUS", posc, 3,
+                         15*0.05+0.2, Scalar(0, 255, 0), 5, LINE_AA);
+                        cout << "entrou verde" << endl;
+                        imshow(WindowName, ReferenceFrame);
+                        }
+                        else if(results[i] == AMARELO){
+                        putText(ReferenceFrame, "GENIUS", posc, 3,
+                         15*0.05+0.2, Scalar(0, 255, 255), 5, LINE_AA);
+                                cout << "entrou amarelo" << endl;
+                                imshow(WindowName, ReferenceFrame);
+                        }
+
+                        auto finish = chrono::high_resolution_clock::now();
+                        time_token += chrono::duration_cast<chrono::nanoseconds>(finish - start).count();
+        
+                        imshow(WindowName, ReferenceFrame);
+
+                        if((time_token * 1e-9 ) >= 1){
+                                i++;
+                                cout << "TEMPO: " << time_token << endl;
+                                time_token = 0;
+                        }
+
+           
+           
+                 }
+
+                 
+                 //Tentando captar sequência
+         /*        
+                       imshow(WindowName, ReferenceFrame);
+                  
+                        vector<int> compara;
+                        int k=0;
+        
+         do{       
+
+                        VideoStream >> ReferenceFrame;
+                        cvtColor(ReferenceFrame, GrayFrame, COLOR_BGR2GRAY);
+                        Detector.process(GrayFrame);
+                        Detector.getObjects(Faces);
+
+                 for (size_t i = 0; i < Faces.size(); i++){
+                        
+                                Rect r = Faces[i];
+                                rectangle(ReferenceFrame, Faces[i], Scalar(0,255,0));   
+
+                                int x_posc = r.x;
+                                int y_posc = r.y;
+                
+                        if(x_posc > 310 && y_posc < 50){ //verde
+                                compara.push_back(2);
+                                continue;
+                        }else if(x_posc < 110 && y_posc < 50){//vermelho
+                                compara.push_back(1);
+                                continue;
+                        }else if(x_posc < 150 && y_posc > 200){ //azul
+                                compara.push_back(0);
+                                continue;
+                        }else if(x_posc > 340 && y_posc > 210){//amarelo
+                                compara.push_back(3);
+                                continue;
+                        }
+                        
+                        for(int j=0;j<tam_sequencia;j++){
+                                if(results[j] == compara[j]){
+                                        k++;
+                                }
+                        }
+
+                        }
+                        if(k==tam_sequencia)
+                                break;
+                        
+                        flip(ReferenceFrame, ReferenceFrame, 1);
+                        imshow(WindowName, ReferenceFrame);   
+
+
+                        }while(1);
+
+                */
         } while (waitKey(30) < 0);
 
         Detector.stop();
