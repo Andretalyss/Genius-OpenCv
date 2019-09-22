@@ -9,7 +9,7 @@ class Genius {
 
 protected:
 std::string name;
-double pont;
+int pont;
 std::vector<int> sequencia;
 int numeroSeq;
 
@@ -19,11 +19,12 @@ Genius();
 
 void setSequencia();
 void setName(std::string name);
+void setPont();
 
 std::vector<int> getSequencia();
 std::string getName();
 int getNumeroSequencia();
-
+int getPont();
 
 };
 

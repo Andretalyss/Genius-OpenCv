@@ -29,20 +29,6 @@ int main(int argc, char** argv)
 
         srand(time(NULL));
 
-        for(int i = 0; i < 3; i++)
-        {
-                game.setSequencia();
-        }
-
-        sequencia = game.getSequencia();
-
-        cout << game.getNumeroSequencia() << endl;
-
-        for(long unsigned int i = 0; i < sequencia.size(); i++)
-        {
-                cout << sequencia[i] << " ";
-        }
-
         cout << "GENIUS GAME" << endl;
         cout << "--------------------------" << endl << endl;
 
@@ -54,14 +40,17 @@ int main(int argc, char** argv)
 
         game.setName(name);
 
-        int tamSequencia = game.getNumeroSequencia();
+        int tamSequencia = 0;
         int cont[5] = {0, 0, 0, 0, 0};
         double time_taken[5] = {0, 0, 0, 0, 0};
         bool res_time = false;
         bool g_start = false;
         bool showing = false;
         bool capturing = false;
+        bool next_round = true;
+        bool game_over = false;
         double alpha[2] = {0.7, 0.9};
+        string score;
 
         namedWindow(WindowName);
 
@@ -119,6 +108,31 @@ int main(int argc, char** argv)
                 cvtColor(ReferenceFrame, GrayFrame, COLOR_BGR2GRAY);
                 Detector.process(GrayFrame);
                 Detector.getObjects(Faces);
+
+                if(next_round)
+                {
+                        game.setSequencia();
+                        sequencia = game.getSequencia();
+                        game.setPont();
+                        score = "score: " + to_string(game.getPont());
+                        next_round = false;
+                        g_start = false;
+                        showing = false;
+                        capturing = false;
+                        tamSequencia = 0;
+                        captured.clear();
+
+                        cout << "Sequencia: ";
+
+                        for(unsigned long int i = 0; i < sequencia.size(); i++)
+                        {
+                                cout << sequencia[i] << " ";
+
+                        } // end for
+
+                        cout << endl;
+
+                } // end if
 
                 for (size_t i = 0; i < Faces.size(); i++)
                 {
@@ -185,7 +199,7 @@ int main(int argc, char** argv)
                 pos.x = (ReferenceFrame.cols / 4) * 3;
                 pos.y = (ReferenceFrame.rows / 10) * 1;
 
-                putText(ReferenceFrame, "Score: ", pos, 0,
+                putText(ReferenceFrame, score, pos, 0,
                         20*0.05+0.1, Scalar(255, 255, 255), 2, LINE_AA);
 
                 pos.x = ((ReferenceFrame.cols / 4) * 3) + 160;
@@ -215,7 +229,7 @@ int main(int argc, char** argv)
 
                         if(g_start)
                         {
-                                if(sequencia[tamSequencia - 1] == 1)
+                                if(sequencia[tamSequencia] == 1)
                                 {
                                         pos.x = (ReferenceFrame.cols / 10) * 4;
                                         pos.y = (ReferenceFrame.rows / 10) * 1;
@@ -233,7 +247,7 @@ int main(int argc, char** argv)
 
                                 } // end else/if
 
-                                else if(sequencia[tamSequencia - 1] == 2)
+                                else if(sequencia[tamSequencia] == 2)
                                 {
                                         pos.x = (ReferenceFrame.cols / 10) * 4;
                                         pos.y = (ReferenceFrame.rows / 10) * 1;
@@ -251,7 +265,7 @@ int main(int argc, char** argv)
 
                                 } // end else/if
 
-                                else if(sequencia[tamSequencia - 1] == 3)
+                                else if(sequencia[tamSequencia] == 3)
                                 {
                                         pos.x = (ReferenceFrame.cols / 10) * 4;
                                         pos.y = (ReferenceFrame.rows / 10) * 1;
@@ -269,7 +283,7 @@ int main(int argc, char** argv)
 
                                 } // end else/if
 
-                                if(sequencia[tamSequencia - 1] == 4)
+                                if(sequencia[tamSequencia] == 4)
                                 {
                                         pos.x = (ReferenceFrame.cols / 10) * 4;
                                         pos.y = (ReferenceFrame.rows / 10) * 1;
@@ -295,7 +309,7 @@ int main(int argc, char** argv)
 
                                 if(g_start && time_taken[0] > showing_delay)
                                 {
-                                        tamSequencia--;
+                                        tamSequencia++;
                                         res_time = true;
 
                                         pos.x = (ReferenceFrame.cols / 10) * 4;
@@ -319,7 +333,7 @@ int main(int argc, char** argv)
 
                         } // end if
 
-                        if(tamSequencia == 0)
+                        if(tamSequencia == game.getNumeroSequencia())
                         {
                                 capturing = true;
                                 showing = false;
@@ -451,22 +465,35 @@ int main(int argc, char** argv)
 
                                 } // end if
 
+                                for(unsigned long int i = 0; i < captured.size(); i++)
+                                {
+                                        if(!captured.empty() && captured[i] != (game.getSequencia())[i]) game_over = true;
+
+                                } // end for
+
                                 if(captured.size() == game.getNumeroSequencia())
                                 {
                                         capturing = false;
 
-                                        for(unsigned long int i = 0; i < captured.size(); i++)
-                                        {
-
-                                                cout << "captured " << i << " : " << captured[i] << endl;
-
-                                        } // end for
+                                        if(!game_over) next_round = true;
 
                                 } // end if
 
                         } // end for
 
                 } // end if
+
+                cout << "Captured: ";
+
+                for(unsigned long int i = 0; i < captured.size(); i++)
+                {
+                        cout << captured[i] << " ";
+
+                } // end for
+
+                cout << endl;
+
+                if(game_over) cout << "----- game over -----" << endl;
 
                 imshow(WindowName, ReferenceFrame);
 

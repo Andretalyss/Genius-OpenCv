@@ -4,7 +4,7 @@
 
 Genius::Genius(){
 
-        pont = 0;
+        pont = -1;
         numeroSeq = 0;
 
 }
@@ -37,6 +37,12 @@ void Genius::setName(std::string name)
 
 }
 
+void Genius::setPont()
+{
+        this->pont++;
+
+} // end setPont
+
 std::vector<int> Genius::getSequencia(){
 
         return sequencia;
@@ -53,3 +59,9 @@ int Genius::getNumeroSequencia(){
 
         return numeroSeq;
 }
+
+int Genius::getPont()
+{
+        return pont;
+
+} // end getPont
