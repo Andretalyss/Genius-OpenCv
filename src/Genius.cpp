@@ -3,23 +3,53 @@
 #include <time.h>
 
 Genius::Genius(){
-    numeroSeq=0;
+
+        pont = 0;
+        numeroSeq = 0;
+
 }
 
 void Genius::setSequencia(){
-    
-    srand(time(NULL));
-    sequencia.push_back(rand() % 4);
-    numeroSeq++; 
+
+        int valor;
+
+        valor = (rand() % 4) + 1;
+
+        if(sequencia.size() > 0)
+        {
+                while(valor == sequencia.back())
+                {
+                        valor = (rand() % 4) + 1;
+
+                } // end while
+
+        } // end if
+
+        sequencia.push_back(valor);
+        numeroSeq++;
+
+}
+
+void Genius::setName(std::string name)
+{
+
+        this->name = name;
 
 }
 
 std::vector<int> Genius::getSequencia(){
 
-    return sequencia;
+        return sequencia;
+}
+
+std::string Genius::getName()
+{
+
+        return name;
+
 }
 
 int Genius::getNumeroSequencia(){
 
-    return numeroSeq;
+        return numeroSeq;
 }

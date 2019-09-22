@@ -6,18 +6,23 @@
 
 
 class Genius {
-    protected:
-            std::string name;
-            double pont;
-            std::vector<int> sequencia;
-            int numeroSeq;
 
-    public:
-        Genius();
-        void setSequencia();
-        std::vector<int> getSequencia();
-        int getNumeroSequencia();
-        
+protected:
+std::string name;
+double pont;
+std::vector<int> sequencia;
+int numeroSeq;
+
+public:
+
+Genius();
+
+void setSequencia();
+void setName(std::string name);
+
+std::vector<int> getSequencia();
+std::string getName();
+int getNumeroSequencia();
 
 
 };
