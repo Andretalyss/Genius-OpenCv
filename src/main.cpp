@@ -19,18 +19,6 @@ using namespace cv;
 
 const string WindowName = "LP1 Final Project";
 
-void gameOverSound()
-{
-        system("canberra-gtk-play -f sound/Gameover.wav");
-
-} // end gameOverSound
-
-void sound()
-{
-        thread t1(gameOverSound);
-
-}
-
 int main(int argc, char** argv)
 {
         system ("tput clear");
@@ -509,7 +497,7 @@ int main(int argc, char** argv)
 
                                                 if(!game_over) {
                                                         next_round = true;
-                                                        system("canberra-gtk-play -f sound/Win.wav");
+                                                        system("canberra-gtk-play -f sound/Win.wav &");
                                                 }
 
 
@@ -528,7 +516,7 @@ int main(int argc, char** argv)
                                         40*0.05+0.1, Scalar(0, 0, 255), 5, LINE_AA);
 
                                 if(somGameOver) {
-                                        system("canberra-gtk-play -f sound/Gameover.wav");
+                                        system("canberra-gtk-play -f sound/Gameover.wav &");
                                         somGameOver = false;
                                 }
                         }
