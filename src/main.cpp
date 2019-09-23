@@ -4,6 +4,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/objdetect.hpp>
+#include <fstream>
+#include <iostream>
 
 #include <stdio.h>
 #include <vector>
@@ -49,15 +51,17 @@ int main(int argc, char** argv)
         bool capturing = false;
         bool next_round = true;
         bool game_over = false;
+        bool somGameOver = true;
         double alpha[2] = {0.7, 0.9};
         string score;
+        int pont;
 
         namedWindow(WindowName);
 
         VideoCapture VideoStream(0);
 
-        VideoStream.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
-        VideoStream.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
+        //VideoStream.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
+        //VideoStream.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
 
         if (!VideoStream.isOpened())
         {
@@ -115,6 +119,7 @@ int main(int argc, char** argv)
                         sequencia = game.getSequencia();
                         game.setPont();
                         score = "score: " + to_string(game.getPont());
+                        pont = game.getPont();
                         next_round = false;
                         g_start = false;
                         showing = false;
@@ -467,7 +472,10 @@ int main(int argc, char** argv)
 
                                 for(unsigned long int i = 0; i < captured.size(); i++)
                                 {
-                                        if(!captured.empty() && captured[i] != (game.getSequencia())[i]) game_over = true;
+                                        if(!captured.empty() && captured[i] != (game.getSequencia())[i]){
+ 
+                                        game_over = true;
+                                        }
 
                                 } // end for
 
@@ -475,7 +483,11 @@ int main(int argc, char** argv)
                                 {
                                         capturing = false;
 
-                                        if(!game_over) next_round = true;
+                                        if(!game_over){
+                                        next_round = true;
+                                        system("canberra-gtk-play -f Win.wav");
+                                        }     
+                                  
 
                                 } // end if
 
@@ -483,7 +495,7 @@ int main(int argc, char** argv)
 
                 } // end if
 
-                cout << "Captured: ";
+                cout << "Captured: " << endl;
 
                 for(unsigned long int i = 0; i < captured.size(); i++)
                 {
@@ -491,16 +503,28 @@ int main(int argc, char** argv)
 
                 } // end for
 
-                cout << endl;
 
-                if(game_over) cout << "----- game over -----" << endl;
+                if(game_over){ 
+                        if(somGameOver){
+                        system("canberra-gtk-play -f Gameover.wav");
+                        somGameOver = false;
+                        }
+                }
 
                 imshow(WindowName, ReferenceFrame);
 
         } while (waitKey(30) < 0);
-
+        
         Detector.stop();
+        game.Salvar(name,pont);
 
+        cout << "[1] Rank ou QUALQUER TECLA para sair" << endl;
+        int opt;
+        cin >> opt;
+
+        if(opt==1) game.Ler();
+        
+        
         return 0;
 
 } // end main

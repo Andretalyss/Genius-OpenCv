@@ -23,6 +23,8 @@ void setPont();
 
 std::vector<int> getSequencia();
 std::string getName();
+void Salvar(std::string name, int pont);
+void Ler();
 int getNumeroSequencia();
 int getPont();
 
