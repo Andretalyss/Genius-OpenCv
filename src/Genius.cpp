@@ -5,6 +5,12 @@
 
 using namespace std;
 
+bool compare_rank(Player a, Player b)
+{
+        return a.score > b.score;
+
+} // end compare_insertion
+
 Genius::Genius(){
 
         pont = -1;
@@ -15,11 +21,12 @@ Genius::Genius(){
 void Genius::Salvar(string name, int pont)
 {
         fstream file;
-        file.open("Rank.txt", ios::app);
+        file.open("files/Rank.txt", ios::app);
 
-        if(pont > 0){
-        file << "Nome: " << name << " | " << endl;
-        file << pont << endl;
+        if(pont > 0) {
+
+                file << name << endl;
+                file << pont << endl;
         }
 
         file.close();
@@ -29,36 +36,30 @@ void Genius::Salvar(string name, int pont)
 void Genius::Ler()
 {
         std::fstream file;
-        file.open("Rank.txt", ios::in);
-        string nome;
-        int pont;
-        vector<string> nomes;
-        vector<int> points;
+        file.open("files/Rank.txt", ios::in);
+        std::string line;
 
-        while(1){
-                getline(file,nome);
-                cout << nome << endl;
-                if(file.eof() || file.fail() || !file.good())
-                        break;
-                
-                file >> pont; 
-                cout << pont << endl;
-                nomes.push_back(nome);
-                points.push_back(pont);
-                
+        Player player;
 
-        }
+        while(file.peek() != EOF)
+        {
+                int i = 0;
+
+                std::getline(file, line);
+                player.name = line;
+
+                std::getline(file, line);
+                player.score = stoi(line);
+
+                rank.push_back(player);
+
+                i++;
+
+        } // end while
+
+        sort(rank.begin(), rank.end(), compare_rank);
 
         file.close();
-
-        int maior = points[0];
-        for(int i=0;i<points.size() && nomes.size();i++){
-              //  if(points[i] > maior){
-                  //      maior = points[i];
-                    cout << nomes[i] << "Score: " << points[i] << endl;
-                //}
-              //  cout << "Loko" << endl;
-        }
 
 }
 
@@ -96,6 +97,19 @@ void Genius::setPont()
 
 } // end setPont
 
+void Genius::setRankName(int i, std::string name)
+{
+        this->rank[i].name = name;
+
+} // end setRankName
+
+void Genius::setRankScore(int i, int score)
+{
+
+        this->rank[i].score = score;
+
+} // end setRankScore
+
 std::vector<int> Genius::getSequencia(){
 
         return sequencia;
@@ -118,3 +132,15 @@ int Genius::getPont()
         return pont;
 
 } // end getPont
+
+std::string Genius::getRankName(int i)
+{
+        return this->rank[i].name;
+
+} // end getRankName
+
+int Genius::getRankScore(int i)
+{
+        return this->rank[i].score;
+
+} // end getRankScore
