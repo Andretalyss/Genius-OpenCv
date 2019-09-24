@@ -1,3 +1,16 @@
+/*
+
+
+        Project for Object Oriented Programming Language Laboratory;
+        Game Genius with Opencv4;
+
+        Authors: André Talysson [Computer engineering in formation at UFPB];
+        Carlos Henrique [Computer engineering in formation at UFPB];
+        Rafael Farias [Computer engineering in formation at UFPB];
+
+
+*/
+
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
