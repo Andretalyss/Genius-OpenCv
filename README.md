@@ -1,2 +1,3 @@
-# ProjetoOpenCV
-LP1 Project with Opencv
+# ProjectOpenCV
+LP1 Project with Opencv.
+Implementation of Genius game.
